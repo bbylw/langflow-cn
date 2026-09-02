@@ -87,6 +87,11 @@ html[data-theme="dark"] {
     background: var(--color-accent);
     color: var(--color-accent-ink);
   }
+  /* 深色下文本强调色偏亮，选中态改用实色按钮底保证对比 */
+  html[data-theme="dark"] ::selection {
+    background: var(--color-accent-solid);
+    color: #ffffff;
+  }
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
@@ -522,7 +527,7 @@ html[data-theme="dark"] .prose-docs pre.astro-code span { color: var(--shiki-dar
   line-height: 0.82;
   font-size: clamp(4.5rem, 15vw, 13rem);
   color: transparent;
-  -webkit-text-stroke: 1.5px var(--color-hair-strong);
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--color-faint) 62%, transparent);
   user-select: none;
   mask-image: linear-gradient(to bottom, black 15%, transparent 92%);
   -webkit-mask-image: linear-gradient(to bottom, black 15%, transparent 92%);
