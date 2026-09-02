@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://langflow.ndjp.net/sitemap-index.xml

@@ -1,0 +1,235 @@
+---
+// FlowShot - 产品级 Flow 画布：HTML 节点卡片 + SVG 连线层（纯代码，无位图）。
+// 节点用 Phosphor 真图标（渐变图标块），端口色与 src/data/site.ts 一致。
+// 缩放机制：外层锁定 aspect-ratio + container-type，内部尺寸全部走 --u
+// （1 viewBox 单位 = var(--u)），宽窄两种画布共用同一套 class。
+// 对齐：卡片 min-height 与端口 top 均由同一组几何数字换算，保证连线不断开。
+
+interface Port {
+  dy: number;
+  color: string;
+}
+
+interface ShotNode {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  icon: string;
+  color: string;
+  title: string;
+  sub: string;
+  pills: string[];
+  ins?: Port[];
+  outs?: Port[];
+  // 推理状态行（仅 Agent）：底部锚定的轮播短语，纯 CSS 实现。
+  thinking?: string[];
+}
+
+interface Edge {
+  d: string;
+  color: string;
+  label?: { x: number; y: number; text: string };
+}
+
+interface Props {
+  variant: "hero" | "wide";
+  title: string;
+  desc: string;
+}
+
+const { variant, title, desc } = Astro.props;
+
+const C = {
+  msg: "#6366F1",
+  tool: "#06B6D4",
+  table: "#EC4899",
+  json: "#F43F5E",
+  emb: "#10B981",
+};
+
+let W = 0;
+let H = 0;
+let nodes: ShotNode[] = [];
+let edges: Edge[] = [];
+
+if (variant === "hero") {
+  W = 720;
+  H = 520;
+  nodes = [
+    {
+      x: 24, y: 64, w: 200, h: 156, icon: "ph-chat-centered", color: C.msg,
+      title: "对话输入", sub: "Chat Input · Message",
+      pills: ["用户问题", "历史记忆"],
+      outs: [{ dy: 96, color: C.msg }, { dy: 122, color: C.msg }],
+    },
+    {
+      x: 24, y: 330, w: 200, h: 156, icon: "ph-database", color: C.emb,
+      title: "知识库检索", sub: "Qdrant · Embeddings",
+      pills: ["Top-K 召回", "重排序"],
+      outs: [{ dy: 96, color: C.emb }, { dy: 122, color: C.emb }],
+    },
+    {
+      x: 268, y: 140, w: 216, h: 320, icon: "ph-robot", color: C.tool,
+      title: "Agent 编排", sub: "Tool Calling",
+      pills: ["计算器", "网页抓取", "知识库问答"],
+      ins: [{ dy: 70, color: C.msg }, { dy: 150, color: C.emb }],
+      outs: [{ dy: 110, color: C.msg }],
+      thinking: ["检索知识库…", "调用计算器…", "生成回答…"],
+    },
+    {
+      x: 512, y: 208, w: 184, h: 156, icon: "ph-paper-plane-tilt", color: C.msg,
+      title: "对话输出", sub: "Chat Output · 流式",
+      pills: ["流式回答"],
+      ins: [{ dy: 78, color: C.msg }],
+    },
+  ];
+  edges = [
+    { d: "M 224 160 C 248 160, 248 210, 268 210", color: C.msg },
+    { d: "M 224 426 C 248 426, 248 290, 268 290", color: C.emb },
+    { d: "M 484 250 C 498 250, 498 286, 512 286", color: C.msg },
+  ];
+} else {
+  W = 1180;
+  H = 560;
+  nodes = [
+    {
+      x: 28, y: 200, w: 180, h: 150, icon: "ph-file-text", color: C.msg,
+      title: "文本输入", sub: "Text Input",
+      pills: ["产品文档"],
+      outs: [{ dy: 92, color: C.msg }],
+    },
+    {
+      x: 262, y: 200, w: 180, h: 150, icon: "ph-scissors", color: C.table,
+      title: "文档切分", sub: "Splitter · 1000字",
+      pills: ["递归切分"],
+      ins: [{ dy: 75, color: C.msg }],
+      outs: [{ dy: 75, color: C.table }, { dy: 101, color: C.table }],
+    },
+    {
+      x: 496, y: 56, w: 180, h: 140, icon: "ph-database", color: C.emb,
+      title: "向量库", sub: "Qdrant 向量库",
+      pills: ["余弦检索"],
+      ins: [{ dy: 70, color: C.table }],
+    },
+    {
+      x: 496, y: 344, w: 180, h: 140, icon: "ph-sparkle", color: C.json,
+      title: "嵌入模型", sub: "Embeddings",
+      pills: ["向量化"],
+      ins: [{ dy: 70, color: C.table }],
+    },
+    {
+      x: 730, y: 176, w: 200, h: 220, icon: "ph-robot", color: C.tool,
+      title: "Agent 问答", sub: "RAG · 工具调用",
+      pills: ["检索增强", "引用来源"],
+      ins: [{ dy: 70, color: C.emb }, { dy: 170, color: C.json }],
+      outs: [{ dy: 110, color: C.msg }],
+      thinking: ["向量检索…", "重排引用…", "流式生成…"],
+    },
+    {
+      x: 984, y: 200, w: 168, h: 150, icon: "ph-paper-plane-tilt", color: C.msg,
+      title: "对话输出", sub: "Chat Output",
+      pills: ["流式回答"],
+      ins: [{ dy: 75, color: C.msg }],
+    },
+  ];
+  edges = [
+    { d: "M 208 292 C 236 292, 236 275, 262 275", color: C.msg },
+    {
+      d: "M 442 275 C 470 275, 470 126, 496 126", color: C.table,
+      label: { x: 452, y: 208, text: "Table" },
+    },
+    { d: "M 442 301 C 470 301, 470 414, 496 414", color: C.table },
+    { d: "M 676 126 C 704 126, 704 246, 730 246", color: C.emb },
+    { d: "M 676 414 C 704 414, 704 346, 730 346", color: C.json },
+    {
+      d: "M 930 286 C 958 286, 958 275, 984 275", color: C.msg,
+      label: { x: 898, y: 256, text: "Message" },
+    },
+  ];
+}
+
+// viewBox 单位 → %（定位）/ cqw（尺寸）：1 单位 = 100/W cqw。
+const pc = (v: number, base: number) => `${((v / base) * 100).toFixed(3)}%`;
+const cq = (v: number) => `${((v / W) * 100).toFixed(4)}cqw`;
+---
+
+<div
+  class={`fshot fshot-${variant}`}
+  role="img"
+  aria-label={`${title}。${desc}`}
+>
+  {/* 连线层 */}
+  <svg
+    class="fshot-edges"
+    viewBox={`0 0 ${W} ${H}`}
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <defs>
+      <filter id={`fse-${variant}`} x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="4" result="b"></feGaussianBlur>
+        <feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+      </filter>
+    </defs>
+    <g fill="none" stroke-linecap="round">
+      {edges.map((e) => (
+        <>
+          <path d={e.d} stroke={e.color} stroke-width={W > 1000 ? 4.5 : 5} opacity="0.16" filter={`url(#fse-${variant})`}></path>
+          <path d={e.d} stroke={e.color} stroke-width={W > 1000 ? 2 : 2.2} class="edge-flow"></path>
+        </>
+      ))}
+    </g>
+  </svg>
+
+  {/* 边标签 */}
+  {edges.map((e) => e.label && (
+    <span
+      class="fedge"
+      style={`left:${pc(e.label.x, W)};top:${pc(e.label.y, H)};border-color:color-mix(in srgb, ${e.color} 45%, transparent)`}
+      aria-hidden="true"
+    >{e.label.text}</span>
+  ))}
+
+  {/* 节点卡片 */}
+  <div aria-hidden="true">
+    {nodes.map((n) => (
+      <div
+        class="fnode"
+        style={`left:${pc(n.x, W)};top:${pc(n.y, H)};width:${pc(n.w, W)};min-height:${cq(n.h)};--node-c:${n.color}`}
+      >
+        <div class="fhead">
+          <span
+            class="ficon"
+            style={`background:linear-gradient(135deg, ${n.color}, color-mix(in srgb, ${n.color} 52%, black))`}
+          ><i class={`ph ${n.icon}`}></i></span>
+          <span class="ftitles">
+            <span class="ftitle">{n.title}</span>
+            <span class="fsub">{n.sub}</span>
+          </span>
+          <span class="fstatus" style={`background:${n.color}`}></span>
+        </div>
+        <div class="fdiv"></div>
+        <div class="fpills">
+          {n.pills.map((p) => (
+            <span class="fpill"><span class="fdot"></span>{p}</span>
+          ))}
+        </div>
+        {n.thinking && (
+          <div class="fthink">
+            <span class="tdots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="tphrases">
+              {n.thinking.map((t) => <span>{t}</span>)}
+            </span>
+          </div>
+        )}
+        {(n.ins ?? []).map((pt) => (
+          <span class="fport in" style={`top:${cq(pt.dy)};--pc:${pt.color}`}></span>
+        ))}
+        {(n.outs ?? []).map((pt) => (
+          <span class="fport out" style={`top:${cq(pt.dy)};--pc:${pt.color}`}></span>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>

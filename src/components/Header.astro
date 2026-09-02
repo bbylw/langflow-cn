@@ -1,0 +1,125 @@
+---
+// Nav keeps the existing IA (anchors + /install + /components) for SEO/muscle memory.
+const links = [
+  { href: "/#features", label: "特性" },
+  { href: "/#editor", label: "编辑器" },
+  { href: "/#agents", label: "智能体与 MCP" },
+  { href: "/docs", label: "文档" },
+  { href: "/install", label: "安装" },
+  { href: "/components", label: "组件" },
+];
+---
+
+<div id="header-sentinel" class="h-px w-full" aria-hidden="true"></div>
+
+<header id="site-header" class="site-header sticky top-0 z-40 w-full">
+  <div class="wrap flex h-16 items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-2.5 shrink-0" aria-label="Langflow 首页">
+      <span class="grid size-8 place-items-center rounded-[10px] bg-accent-solid text-[13px] font-black tracking-tighter text-accent-ink">LF</span>
+      <span class="font-display text-[17px] font-bold text-ink">Langflow</span>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-0.5 text-[13.5px] font-medium text-muted" aria-label="主导航">
+      {links.map((l) => (
+        <a href={l.href} class="rounded-full px-3 py-2 transition-colors hover:text-ink">{l.label}</a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <button
+        id="theme-toggle"
+        type="button"
+        class="grid size-9 place-items-center rounded-full border border-hair text-muted transition-colors hover:text-ink"
+        aria-label="切换深浅色"
+        aria-pressed="false">
+        <i class="ph ph-moon-stars text-[17px]" data-icon aria-hidden="true"></i>
+      </button>
+
+      <a href="https://github.com/langflow-ai/langflow" target="_blank" rel="noreferrer"
+         class="hidden sm:grid size-9 place-items-center rounded-full border border-hair text-muted transition-colors hover:text-ink"
+         aria-label="GitHub 仓库">
+        <i class="ph ph-github-logo text-[17px]" aria-hidden="true"></i>
+      </a>
+
+      <a href="/install" class="btn btn-primary hidden sm:inline-flex">
+        立即开始
+        <i class="ph ph-arrow-right text-[15px]" aria-hidden="true"></i>
+      </a>
+
+      <button id="menu-btn" type="button" class="lg:hidden grid size-9 place-items-center rounded-full border border-hair text-ink" aria-label="打开菜单" aria-expanded="false" aria-controls="mobile-nav">
+        <i class="ph ph-list text-[19px]" data-menu-icon aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-nav" class="hidden lg:hidden border-t border-hair">
+    <nav class="wrap grid gap-1 py-4 text-[15px] font-medium">
+      {links.map((l) => (
+        <a href={l.href} class="rounded-[10px] px-3 py-2.5 text-ink transition-colors hover:bg-surface-2">{l.label}</a>
+      ))}
+      <a href="https://docs.langflow.org" target="_blank" rel="noreferrer" class="rounded-[10px] px-3 py-2.5 text-accent transition-colors hover:bg-surface-2">官方文档</a>
+      <a href="/install" class="btn btn-primary mt-2 justify-center">立即开始<i aria-hidden="true" class="ph ph-arrow-right text-[15px]"></i></a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Header elevation via IntersectionObserver sentinel (no window scroll listener).
+  const sentinel = document.getElementById("header-sentinel");
+  const header = document.getElementById("site-header");
+  if (sentinel && header && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      ([e]) => header.dataset.scrolled = String(!e.isIntersecting),
+      { rootMargin: "-8px 0px 0px 0px" }
+    );
+    io.observe(sentinel);
+  }
+
+  // Theme toggle - persists choice, updates icon + color-scheme.
+  const root = document.documentElement;
+  const tbtn = document.getElementById("theme-toggle");
+  const ticon = tbtn?.querySelector("[data-icon]");
+  const paintTheme = (t: string) => {
+    if (ticon) ticon.className = t === "dark" ? "ph ph-sun text-[17px]" : "ph ph-moon-stars text-[17px]";
+    tbtn?.setAttribute("aria-pressed", String(t === "dark"));
+  };
+  paintTheme(root.dataset.theme || "light");
+  tbtn?.addEventListener("click", () => {
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = next;
+    root.style.colorScheme = next;
+    try { localStorage.setItem("theme", next); } catch {}
+    paintTheme(next);
+  });
+  // Follow the OS only while the user has not made an explicit choice.
+  if (!("theme" in localStorage)) {
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    mq.addEventListener?.("change", (e) => {
+      const t = e.matches ? "dark" : "light";
+      root.dataset.theme = t; root.style.colorScheme = t; paintTheme(t);
+    });
+  }
+
+  // Mobile menu: toggle, close on link click / Escape.
+  const mbtn = document.getElementById("menu-btn");
+  const mnav = document.getElementById("mobile-nav");
+  const micon = mbtn?.querySelector("[data-menu-icon]");
+  const setMenu = (open: boolean) => {
+    mnav?.classList.toggle("hidden", !open);
+    mbtn?.setAttribute("aria-expanded", String(open));
+    mbtn?.setAttribute("aria-label", open ? "关闭菜单" : "打开菜单");
+    if (micon) micon.className = open ? "ph ph-x text-[19px]" : "ph ph-list text-[19px]";
+  };
+  mbtn?.addEventListener("click", () => {
+    setMenu(mnav?.classList.contains("hidden") ?? false);
+  });
+  mnav?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => setMenu(false))
+  );
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && mnav && !mnav.classList.contains("hidden")) {
+      setMenu(false);
+      mbtn?.focus();
+    }
+  });
+</script>

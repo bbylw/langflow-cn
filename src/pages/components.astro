@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { componentGroups as groups, ports } from '../data/site';
+---
+
+<Layout title="组件生态 - Langflow" description="Langflow 组件分类、端口数据类型与自定义组件写法。核心组件加 Bundles，支持 Python 自定义。">
+  <Header />
+
+  <main id="main-content">
+  <section class="section hero-grid pt-12 md:pt-16" aria-label="组件生态">
+    <div class="glow-orb left-1/2 top-[-220px] h-[420px] w-[680px] -translate-x-1/2" aria-hidden="true"></div>
+    <div class="wrap max-w-[820px]">
+      <span class="enter pill pill-accent" style="--ed:0ms"><span class="dot-live" aria-hidden="true"></span>核心组件 · Bundles · 自定义</span>
+      <h1 class="enter mt-5 font-display text-[34px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink md:text-[44px]" style="--ed:90ms">组件生态</h1>
+      <p class="enter mt-4 text-[16px] leading-relaxed text-muted" style="--ed:180ms">组件是 Flow 的积木。核心组件提供通用能力，Bundles 按服务商分组，也支持自定义 Python 组件与分组复用。</p>
+      <div class="enter mt-6 flex max-w-[440px] items-center gap-2 rounded-full border border-hair bg-surface px-4 py-2.5 transition-colors focus-within:border-hair-strong" style="--ed:240ms">
+        <i aria-hidden="true" class="ph ph-magnifying-glass text-[16px] text-faint"></i>
+        <input id="component-filter" type="search" placeholder="搜索组件，比如 Agent、MCP、Memory…" autocomplete="off"
+          class="w-full bg-transparent text-[14px] text-ink outline-none placeholder:text-faint" aria-label="搜索组件" />
+      </div>
+    </div>
+
+    <!-- Grouped component catalog -->
+    <div class="wrap mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3" id="component-catalog">
+      {groups.map((g) => (
+        <div class="reveal card card-hover p-6" data-group={g.name}>
+          <div class="flex items-center gap-3">
+            <div class="itile size-9 text-[1.05rem]"><i aria-hidden="true" class={`ph ${g.icon}`}></i></div>
+            <div class="font-display text-[16px] font-bold text-ink">{g.name}</div>
+          </div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {g.items.map((i) => <span data-item={i.toLowerCase()} class="rounded-full border border-hair bg-surface-2 px-3 py-1 text-[12.5px] text-muted">{i}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="wrap mt-4 hidden" id="component-empty">
+      <div class="rounded-[16px] border border-dashed border-hair-strong p-8 text-center text-[14px] text-muted">没有匹配的组件，换个关键词试试。</div>
+    </div>
+
+    <!-- Port types + custom component: two-column, distinct treatments -->
+    <div class="wrap mt-4 grid gap-4 lg:grid-cols-2">
+      <div class="reveal card card-hover p-7">
+        <div class="font-display text-[18px] font-bold text-ink">端口与数据类型</div>
+        <p class="mt-2 text-[14px] leading-relaxed text-muted">端口颜色标识数据类型，悬停查看详情，不兼容时用 Type Convert 转换。</p>
+        <ul class="mt-5 grid gap-px overflow-hidden rounded-[10px] border border-hair bg-hair">
+          {ports.map((p) => (
+            <li class="flex items-center justify-between bg-surface px-4 py-3 text-[13.5px]">
+              <span class="flex items-center gap-3 text-ink"><span class="size-2.5 rounded-[3px]" style={`background:${p.color}`}></span>{p.name}</span>
+              <span class="text-faint">{p.desc}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="reveal card-hover overflow-hidden rounded-[16px] bg-[#0B0C0F] text-[#ECECEF] ring-1 ring-white/10">
+        <div class="flex items-center gap-1.5 border-b border-white/10 px-5 py-3" aria-hidden="true">
+          <span class="size-2.5 rounded-full bg-[#FF5F57]"></span>
+          <span class="size-2.5 rounded-full bg-[#FEBC2E]"></span>
+          <span class="size-2.5 rounded-full bg-[#28C840]"></span>
+          <span class="ml-2 font-mono text-[11px] text-[#7B7C82]">custom_component.py</span>
+        </div>
+        <div class="p-7 pt-6">
+          <div class="flex items-center justify-between gap-3">
+            <div class="font-display text-[18px] font-bold">自定义组件</div>
+            <button type="button" class="copy-btn !border-white/15 !text-[#A3A4AA] hover:!border-white/30 hover:!text-white" data-copy="custom-code" aria-label="复制自定义组件代码"><i aria-hidden="true" class="ph ph-copy text-[12px]"></i><span data-copy-label>复制</span></button>
+          </div>
+          <p class="mt-2 text-[14px] leading-relaxed text-[#A3A4AA]">继承 Component，使用输入定义与 build 方法。选中组件点 Code 即可编辑源码。</p>
+          <pre class="mt-5 overflow-x-auto rounded-[10px] border border-white/10 bg-white/[0.06] p-4 font-mono text-[11.5px] leading-relaxed" id="custom-code"><code>from lfx.components.base import Component
+
+class MySplitter(Component):
+    display_name = "My Splitter"
+    inputs = [IntInput(name="chunk_size", value=1000)]
+
+    def build(self):
+        return RecursiveCharacterTextSplitter(
+            chunk_size=self.chunk_size)</code></pre>
+          <a href="/docs/concepts/components" class="link-arrow mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-[#86B4FF] hover:underline">查看自定义组件文档 <i aria-hidden="true" class="ph ph-arrow-right text-[14px]"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related docs -->
+    <div class="wrap mt-8 max-w-[820px]">
+      <div class="reveal flex flex-wrap gap-3">
+        <a href="/docs/concepts/components" class="btn btn-secondary">组件总览</a>
+        <a href="/docs/concepts/data-types" class="btn btn-secondary">数据类型</a>
+        <a href="/docs/concepts/flows" class="btn btn-secondary">构建 Flows</a>
+        <a href="/docs/agents/agents" class="btn btn-secondary">Agent</a>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  import { initCopyButtons } from '../scripts/copy.js';
+  initCopyButtons();
+
+  // Live filter: match item chips, hide groups with zero hits, show empty state.
+  const input = document.getElementById("component-filter") as HTMLInputElement | null;
+  const catalog = document.getElementById("component-catalog");
+  const empty = document.getElementById("component-empty");
+  const cards = catalog ? Array.from(catalog.querySelectorAll<HTMLElement>("[data-group]")) : [];
+  input?.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    let visibleGroups = 0;
+    cards.forEach((card) => {
+      let hits = 0;
+      card.querySelectorAll<HTMLElement>("[data-item]").forEach((chip) => {
+        const hit = q === "" || (chip.dataset.item ?? "").includes(q);
+        chip.style.display = hit ? "" : "none";
+        if (hit) hits += 1;
+      });
+      const show = hits > 0;
+      card.style.display = show ? "" : "none";
+      if (show) visibleGroups += 1;
+    });
+    empty?.classList.toggle("hidden", visibleGroups > 0);
+  });
+</script>

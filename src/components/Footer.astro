@@ -1,0 +1,81 @@
+---
+const product = [
+  { href: "/#features", label: "核心特性" },
+  { href: "/#editor", label: "可视化编辑器" },
+  { href: "/#agents", label: "智能体与 MCP" },
+  { href: "/install", label: "安装与部署" },
+];
+const developer = [
+  { href: "https://docs.langflow.org", label: "官方文档" },
+  { href: "/components", label: "组件生态" },
+  { href: "https://github.com/langflow-ai/langflow", label: "GitHub 仓库" },
+  { href: "https://github.com/langflow-ai/langflow/blob/main/CONTRIBUTING.md", label: "贡献指南" },
+];
+const social = [
+  { href: "https://github.com/langflow-ai/langflow", icon: "ph-github-logo", label: "GitHub" },
+  { href: "https://discord.gg/EqksyE2EX9", icon: "ph-discord-logo", label: "Discord" },
+  { href: "https://twitter.com/langflow_ai", icon: "ph-x-logo", label: "X" },
+  { href: "https://www.youtube.com/@Langflow", icon: "ph-youtube-logo", label: "YouTube" },
+];
+---
+
+<footer class="border-t border-hair bg-surface">
+  <div class="wrap py-14">
+    <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.8fr_0.9fr]">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <span class="grid size-8 place-items-center rounded-[10px] bg-accent-solid text-[13px] font-black tracking-tighter text-accent-ink">LF</span>
+          <span class="font-display text-[17px] font-bold text-ink">Langflow</span>
+        </div>
+        <p class="mt-4 max-w-[34ch] text-[13.5px] leading-relaxed text-muted">
+          开源可视化 AI 编排平台。拖拽连接模型、向量库与工具，把流程发布为 API 与 MCP 工具。MIT 协议，社区驱动。
+        </p>
+        <div class="mt-5 flex items-center gap-2">
+          {social.map((s) => (
+            <a href={s.href} target="_blank" rel="noreferrer" aria-label={s.label}
+               class="grid size-9 place-items-center rounded-full border border-hair text-muted transition-colors hover:border-hair-strong hover:text-ink">
+              <i class={`ph ${s.icon} text-[17px]`} aria-hidden="true"></i>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div class="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">产品</div>
+        <ul class="mt-4 grid gap-2.5 text-[13.5px]">
+          {product.map((l) => <li><a href={l.href} class="text-muted transition-colors hover:text-ink">{l.label}</a></li>)}
+        </ul>
+      </div>
+
+      <div>
+        <div class="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">开发者</div>
+        <ul class="mt-4 grid gap-2.5 text-[13.5px]">
+          {developer.map((l) => (
+            <li>
+              {l.href.startsWith("/") ? (
+                <a href={l.href} class="text-muted transition-colors hover:text-ink">{l.label}</a>
+              ) : (
+                <a href={l.href} target="_blank" rel="noreferrer" class="text-muted transition-colors hover:text-ink">{l.label}</a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="card-2 p-6">
+        <div class="font-display text-[15px] font-bold text-ink">开始你的第一个 Flow</div>
+        <p class="mt-1.5 text-[12.5px] leading-relaxed text-muted">两条命令本地启动，或下载零配置的桌面版。</p>
+        <a href="/install" class="btn btn-primary mt-4 w-full justify-center">立即开始<i aria-hidden="true" class="ph ph-arrow-right text-[15px]"></i></a>
+      </div>
+    </div>
+
+    <div class="mt-14 overflow-hidden" aria-hidden="true">
+      <div class="wordmark">Langflow</div>
+    </div>
+
+    <div class="mt-4 flex flex-col items-start justify-between gap-3 border-t border-hair pt-6 text-[12.5px] text-faint md:flex-row md:items-center">
+      <div>本站为中文社区翻译与重构，非官方站点，内容基于 <a href="https://docs.langflow.org" target="_blank" rel="noreferrer" class="underline decoration-hair-strong underline-offset-2 transition-colors hover:text-muted">docs.langflow.org</a> 与 GitHub README。</div>
+      <div>© 2026 Langflow 社区 · MIT License</div>
+    </div>
+  </div>
+</footer>

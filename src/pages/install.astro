@@ -1,0 +1,110 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="安装与部署 - Langflow" description="Langflow 桌面版、Python 包与 Docker 三种安装方式，附从源码运行与下一步指引。">
+  <Header />
+
+  <main id="main-content">
+  <section class="section hero-grid pt-12 md:pt-16" aria-label="安装 Langflow">
+    <div class="glow-orb left-1/2 top-[-220px] h-[420px] w-[680px] -translate-x-1/2" aria-hidden="true"></div>
+    <div class="wrap max-w-[820px]">
+      <span class="enter pill pill-accent" style="--ed:0ms"><span class="dot-live" aria-hidden="true"></span>3 种方式 · 5 分钟就绪</span>
+      <h1 class="enter mt-5 font-display text-[34px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink md:text-[44px]" style="--ed:90ms">安装 Langflow</h1>
+      <p class="enter mt-4 text-[16px] leading-relaxed text-muted" style="--ed:180ms">选择适合你的方式。桌面版零配置，Python 包最灵活，Docker 适合隔离与生产。</p>
+    </div>
+
+    <!-- Primary: desktop (recommended) - wide, dominant -->
+    <div class="wrap mt-10">
+      <div class="reveal card card-hover overflow-hidden">
+        <div class="grid md:grid-cols-[1.1fr_0.9fr]">
+          <div class="p-7 md:p-9">
+            <div class="flex items-center gap-3">
+              <div class="itile"><i aria-hidden="true" class="ph ph-monitor"></i></div>
+              <div>
+                <div class="font-display text-[20px] font-bold text-ink">桌面版</div>
+                <span class="pill pill-accent mt-0.5">推荐 · 零配置</span>
+              </div>
+            </div>
+            <p class="mt-5 max-w-[42ch] text-[14.5px] leading-relaxed text-muted">内置全部依赖，无需管理 Python 环境。支持 Windows 与 macOS 13+，自动更新。</p>
+            <a href="https://www.langflow.org/desktop" target="_blank" rel="noreferrer" class="btn btn-primary mt-6">下载桌面版 <i aria-hidden="true" class="ph ph-arrow-down text-[15px]"></i></a>
+          </div>
+          <div class="border-t border-hair bg-surface-2 p-7 md:border-l md:border-t-0 md:p-9">
+            <div class="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">安装步骤</div>
+            <ol class="mt-4 grid gap-4 text-[14px] text-muted">
+              <li class="flex gap-3"><span class="step-num mt-0.5">01</span>前往 langflow.org/desktop</li>
+              <li class="flex gap-3"><span class="step-num mt-0.5">02</span>点击 Download，填写信息后下载</li>
+              <li class="flex gap-3"><span class="step-num mt-0.5">03</span>macOS 挂载安装；Windows 运行 .msi 向导</li>
+              <li class="flex gap-3"><span class="step-num mt-0.5">04</span>打开应用，跟随 Quickstart 创建首个 Flow</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secondary: uv + Docker - two code panels, distinct from the wide one above -->
+    <div class="wrap mt-4 grid gap-4 md:grid-cols-2">
+      <div class="reveal card card-hover p-7">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="itile"><i aria-hidden="true" class="ph ph-terminal-window"></i></div>
+            <div class="font-display text-[18px] font-bold text-ink">Python 包 · uv</div>
+          </div>
+          <button type="button" class="copy-btn" data-copy="install-uv" aria-label="复制 uv 安装命令"><i aria-hidden="true" class="ph ph-copy text-[12px]"></i><span data-copy-label>复制</span></button>
+        </div>
+        <p class="mt-4 text-[14px] leading-relaxed text-muted">需要 Python 3.10-3.14 与 uv，建议在独立虚拟环境中安装。</p>
+        <div class="code mt-5" id="install-uv">
+          <div class="cmt"># 创建并激活虚拟环境</div>
+          <div>uv venv langflow-env</div>
+          <div class="cmt"># 安装并启动</div>
+          <div>uv pip install langflow -U</div>
+          <div>uv run langflow run</div>
+          <div class="ok mt-3">→ http://127.0.0.1:7860</div>
+        </div>
+      </div>
+
+      <div class="reveal card card-hover p-7">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="itile"><i aria-hidden="true" class="ph ph-cube"></i></div>
+            <div class="font-display text-[18px] font-bold text-ink">Docker</div>
+          </div>
+          <button type="button" class="copy-btn" data-copy="install-docker" aria-label="复制 Docker 命令"><i aria-hidden="true" class="ph ph-copy text-[12px]"></i><span data-copy-label>复制</span></button>
+        </div>
+        <p class="mt-4 text-[14px] leading-relaxed text-muted">适合隔离运行与团队共享。生产环境请关闭自动登录并设置强密码。</p>
+        <div class="code mt-5" id="install-docker">
+          <div>docker run -p 7860:7860 \</div>
+          <div>&nbsp;&nbsp;-e LANGFLOW_AUTO_LOGIN=false \</div>
+          <div>&nbsp;&nbsp;-e LANGFLOW_SUPERUSER_PASSWORD=<span class="k">你的强密码</span> \</div>
+          <div>&nbsp;&nbsp;langflowai/langflow:latest</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes + next steps -->
+    <div class="wrap mt-8 max-w-[820px]">
+      <div class="reveal rounded-[16px] border border-hair bg-surface-2 p-5 text-[13.5px] leading-relaxed text-muted">
+        <span class="font-semibold text-ink">从源码贡献？</span> 克隆仓库后在根目录运行 <code class="rounded bg-canvas px-1.5 py-0.5 font-mono text-[12.5px] text-accent">make run_cli</code>。Windows 若提示缺少 C++ 编译器，按提示安装 Microsoft C++ Build Tools。
+      </div>
+
+      <div class="reveal mt-8">
+        <div class="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">下一步</div>
+        <div class="mt-4 grid gap-3 sm:grid-cols-3">
+          <a href="/docs/get-started/quickstart" class="card card-hover block p-5"><div class="flex items-center justify-between gap-2"><span class="text-[14.5px] font-semibold text-ink">Quickstart</span><i aria-hidden="true" class="ph ph-arrow-right text-[15px] text-faint"></i></div><div class="mt-1 text-[12.5px] text-muted">几分钟构建首个 Flow</div></a>
+          <a href="/docs/concepts/flows" class="card card-hover block p-5"><div class="flex items-center justify-between gap-2"><span class="text-[14.5px] font-semibold text-ink">构建 Flows</span><i aria-hidden="true" class="ph ph-arrow-right text-[15px] text-faint"></i></div><div class="mt-1 text-[12.5px] text-muted">核心概念与数据结构</div></a>
+          <a href="/docs/get-started/tutorial-rag" class="card card-hover block p-5"><div class="flex items-center justify-between gap-2"><span class="text-[14.5px] font-semibold text-ink">RAG 教程</span><i aria-hidden="true" class="ph ph-arrow-right text-[15px] text-faint"></i></div><div class="mt-1 text-[12.5px] text-muted">动手做一个完整应用</div></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  import { initCopyButtons } from '../scripts/copy.js';
+  initCopyButtons();
+</script>

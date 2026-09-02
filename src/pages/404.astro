@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="页面未找到 - Langflow" description="抱歉，你访问的页面不存在。返回首页或浏览中文文档。" robots="noindex, follow">
+  <Header />
+  <main id="main-content">
+    <section class="section hero-grid pt-16 md:pt-24" aria-label="页面未找到">
+      <div class="glow-orb left-1/2 top-[-200px] h-[420px] w-[680px] -translate-x-1/2" aria-hidden="true"></div>
+      <div class="wrap max-w-[640px] text-center">
+        <div class="enter font-mono text-[13px] uppercase tracking-[0.3em] text-accent" style="--ed:0ms">404 · Not Found</div>
+        <h1 class="enter mt-4 font-display text-[44px] font-extrabold leading-tight tracking-[-0.02em] text-ink md:text-[64px]" style="--ed:90ms">
+          这个页面走丢了
+        </h1>
+        <p class="enter mx-auto mt-4 max-w-[44ch] text-[15.5px] leading-relaxed text-muted" style="--ed:180ms">
+          链接可能已移动或输入有误。试试回到首页，或直接进入文档找答案。
+        </p>
+        <div class="enter mt-8 flex flex-wrap justify-center gap-3" style="--ed:270ms">
+          <a href="/" class="btn btn-primary btn-lg">返回首页</a>
+          <a href="/docs/get-started/about" class="btn btn-secondary btn-lg">浏览文档</a>
+          <a href="/install" class="btn btn-secondary btn-lg">安装指南</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

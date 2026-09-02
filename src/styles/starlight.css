@@ -1,0 +1,151 @@
+/* Self-hosted fonts so the docs match the marketing pages. Vite resolves these
+   bare @imports to each package's CSS via its exports map. */
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* ==========================================================================
+   Starlight branding - Langflow blue accent + brand fonts + reference-style
+   polish. We do NOT override Starlight's gray scale / surfaces (its ramp is
+   inverted and tuned for both modes); we only restyle layout & components.
+   ========================================================================== */
+
+:root {
+  /* Accent (primary) scale - Langflow blue */
+  --sl-color-accent-low: #e6eeff;
+  --sl-color-accent: #155dfc;
+  --sl-color-accent-high: #0a2f8f;
+
+  /* Softer, more designed corners */
+  --sl-border-radius: 12px;
+
+  /* Typography */
+  --sl-font: "Geist Variable", "Geist", system-ui, -apple-system, sans-serif;
+  --sl-font-headings: "Space Grotesk Variable", "Space Grotesk", var(--sl-font);
+  --sl-font-code-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+}
+
+:root[data-theme="dark"] {
+  --sl-color-accent-low: #0a2f8f;
+  --sl-color-accent: #86b4ff;
+  --sl-color-accent-high: #c9dcff;
+}
+
+/* Display font for all headings + tighter tracking (echo marketing pages) */
+h1, h2, h3, h4, h5, h6,
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+.sl-markdown-content :is(h1, h2, h3, h4, h5, h6),
+.hero h1, .sl-flex a {
+  font-family: var(--sl-font-headings);
+}
+.sl-markdown-content :is(h1, h2, h3, h4) {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/* Hero title on the docs landing */
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.hero .tagline {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--sl-color-gray-3);
+  max-width: 42ch;
+}
+
+/* Sidebar: clearer section group labels + comfortable rhythm */
+.sidebar-content summary,
+.sidebar-group-label,
+.mobile-sidebar .top-level > li > details > summary,
+nav.sidebar summary {
+  font-family: var(--font-mono, ui-monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.sidebar-content a,
+.mobile-sidebar a {
+  border-radius: 8px;
+}
+
+/* Callouts (asides): rounded, roomier, on-brand */
+.starlight-aside {
+  border-radius: var(--sl-border-radius);
+  border-width: 1px 1px 1px 4px;
+  padding: 1rem 1.15rem;
+}
+.starlight-aside__title {
+  font-family: var(--sl-font-headings);
+  letter-spacing: 0.01em;
+}
+
+/* Content measure + rhythm */
+.sl-markdown-content {
+  max-width: 760px;
+  line-height: 1.75;
+}
+.sl-markdown-content > :is(p, ul, ol, blockquote, .starlight-aside, table, details) {
+  margin-block: 1.15em;
+}
+.sl-markdown-content :is(h2) {
+  margin-top: 2.4em;
+  padding-top: 1.1em;
+  border-top: 1px solid var(--sl-color-hairline-light);
+}
+.sl-markdown-content :is(h3) {
+  margin-top: 1.8em;
+}
+
+/* Tables: lighter, aligned to brand */
+.sl-markdown-content table {
+  font-size: 0.95rem;
+}
+.sl-markdown-content th {
+  font-family: var(--sl-font-headings);
+  font-weight: 600;
+}
+
+/* Inline code chips */
+.sl-markdown-content code:not(pre code) {
+  border-radius: 6px;
+  padding: 0.1em 0.4em;
+}
+
+/* Feature cards */
+.starlight-cards {
+  gap: 1rem;
+}
+
+/* Header: keep brand lockup tight and legible */
+header {
+  border-bottom: 1px solid var(--sl-color-hairline-light);
+}
+
+/* Accessibility + robustness polish */
+.sl-markdown-content :focus-visible,
+.sidebar-content a:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.sl-markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.sl-markdown-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-content a,
+  .mobile-sidebar a {
+    transition: none;
+  }
+}

@@ -1,0 +1,335 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FlowShot from '../components/FlowShot.astro';
+import { integrations, ports } from '../data/site';
+---
+
+<Layout>
+  <Header />
+
+  <main id="main-content">
+  <!-- HERO: asymmetric split, blueprint grid + orb, badge + H1 + sub + CTAs -->
+  <section class="section hero-grid pt-12 md:pt-16 pb-14 md:pb-20" aria-label="介绍">
+    <div class="glow-orb left-1/2 top-[-180px] h-[480px] w-[720px] -translate-x-1/2" aria-hidden="true"></div>
+    <div class="wrap grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+      <div>
+        <span class="enter pill pill-accent" style="--ed:0ms"><span class="dot-live" aria-hidden="true"></span>MIT 开源 · Python 原生</span>
+        <h1 class="enter mt-5 font-display text-[40px] font-extrabold leading-[1.04] tracking-[-0.02em] text-ink md:text-[54px] lg:text-[62px]" style="--ed:90ms">
+          拖拽编排 AI 流程<br />
+          <span class="text-accent">发布为 API 与 MCP</span>
+        </h1>
+        <p class="enter mt-5 max-w-[46ch] text-[16px] leading-relaxed text-muted md:text-[17px]" style="--ed:180ms">
+          连接大模型、向量库与工具，在 Playground 里实时调试，把每个流程变成可调用的 API、MCP 工具或站点嵌入。
+        </p>
+        <div class="enter mt-8 flex flex-wrap gap-3" style="--ed:270ms">
+          <a href="/install" class="btn btn-primary btn-lg">立即开始 <i class="ph ph-arrow-right text-[15px]" aria-hidden="true"></i></a>
+          <a href="/docs/get-started/about" class="btn btn-secondary btn-lg">阅读文档</a>
+        </div>
+      </div>
+
+      <div class="enter relative" style="--ed:200ms">
+        <div class="overflow-hidden rounded-[16px] ring-1 ring-hair shadow-[0_40px_80px_-40px_rgba(21,93,252,0.35)]">
+          <FlowShot variant="hero" title="Langflow 流程示意：对话输入与知识库检索接入 Agent，输出对话回答" desc="四个节点：对话输入、知识库检索、Agent 编排、对话输出，由 Message 与 Embeddings 端口连线连接。" />
+        </div>
+        <div class="absolute inset-0 hidden flex-col items-end justify-between p-5 sm:flex" aria-hidden="true">
+          <span class="glass-chip float-soft"><i class="ph ph-play text-accent text-[15px]"></i>Playground · 实时调试</span>
+          <span class="glass-chip float-soft" style="animation-delay:-3.5s"><i class="ph ph-plugs-connected text-accent text-[15px]"></i>MCP · 一键发布</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRATIONS: logo marquee (the single marquee on the page) -->
+  <section class="border-y border-hair bg-surface" aria-label="集成生态">
+    <div class="wrap py-10">
+      <p class="text-center text-[13px] text-faint">开箱连接主流大模型与向量数据库</p>
+      <div class="marquee mt-8">
+        <div class="marquee-track">
+          <div class="marquee-half">
+            {integrations.map((i) => (
+              <img
+                src={`https://cdn.simpleicons.org/${i.slug}/85868D`}
+                alt={i.name}
+                title={i.name}
+                width={26}
+                height={26}
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+                class="h-[26px] w-auto opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0"
+              />
+            ))}
+          </div>
+          <div class="marquee-half" aria-hidden="true">
+            {integrations.map((i) => (
+              <img
+                src={`https://cdn.simpleicons.org/${i.slug}/85868D`}
+                alt=""
+                width={26}
+                height={26}
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+                class="h-[26px] w-auto opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0"
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES: asymmetric bento, mixed cell treatments, exact cell count -->
+  <section id="features" class="section section-lazy" aria-label="核心能力">
+    <div class="wrap">
+      <div class="reveal max-w-[52ch]">
+        <span class="eyebrow"><i aria-hidden="true" class="ph ph-squares-four"></i> 核心能力</span>
+        <h2 class="mt-4 font-display text-[30px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink md:text-[40px]">
+          为构建者设计的可视化编排系统
+        </h2>
+        <p class="mt-4 text-[15px] leading-relaxed text-muted">
+          从原型到生产，一套流程贯穿。拖拽连接与 Python 源码级自定义并存，模型与向量库可自由替换。
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-4 md:grid-cols-12">
+        <!-- big: visual builder, tinted gradient cell -->
+        <div class="reveal card-hover relative overflow-hidden rounded-[16px] border border-hair bg-accent-soft p-7 md:col-span-7">
+          <div class="itile"><i aria-hidden="true" class="ph ph-flow-arrow"></i></div>
+          <h3 class="mt-5 font-display text-[19px] font-bold text-ink">可视化构建界面</h3>
+          <p class="mt-2 max-w-[40ch] text-[14px] leading-relaxed text-muted">
+            把 Prompt、模型、向量库与工具拖到画布上连线。端口颜色标识数据类型，接错即时提示，复杂流程也能一眼读懂。
+          </p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            {ports.map((p) => (
+              <span class="pill"><span class="size-2 rounded-full" style={`background:${p.color}`}></span>{p.name}</span>
+            ))}
+          </div>
+          <a href="/docs/concepts/editor" class="link-arrow mt-6 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-accent">了解编辑器 <i aria-hidden="true" class="ph ph-arrow-right text-[14px]"></i></a>
+        </div>
+
+        <!-- tall: custom components, fixed dark code panel -->
+        <div class="reveal card-hover overflow-hidden rounded-[16px] bg-[#0B0C0F] text-[#ECECEF] ring-1 ring-white/10 md:col-span-5">
+          <div class="flex items-center gap-1.5 border-b border-white/10 px-5 py-3" aria-hidden="true">
+            <span class="size-2.5 rounded-full bg-[#FF5F57]"></span>
+            <span class="size-2.5 rounded-full bg-[#FEBC2E]"></span>
+            <span class="size-2.5 rounded-full bg-[#28C840]"></span>
+            <span class="ml-2 font-mono text-[11px] text-[#7B7C82]">component.py</span>
+          </div>
+          <div class="p-7 pt-6">
+            <div class="grid size-11 place-items-center rounded-[10px] bg-white/10 text-[#86B4FF] text-[1.25rem]"><i aria-hidden="true" class="ph ph-code"></i></div>
+            <h3 class="mt-5 font-display text-[19px] font-bold">自定义任意组件</h3>
+            <p class="mt-2 text-[14px] leading-relaxed text-[#A3A4AA]">点击 Code 直接编辑组件源码，继承 Component 基类，定义输入输出与 build 逻辑。</p>
+            <pre class="mt-5 overflow-x-auto rounded-[10px] border border-white/10 bg-white/[0.06] p-4 font-mono text-[11.5px] leading-relaxed text-[#ECECEF]"><code>class MySplitter(Component):
+    inputs = [
+        IntInput(name="chunk_size", value=1000),
+        DataInput(name="data_input", required=True),
+    ]
+    def build(self):
+        return RecursiveCharacterTextSplitter(
+            chunk_size=self.chunk_size)</code></pre>
+          </div>
+        </div>
+
+        <!-- Playground: solid accent cell -->
+        <div class="reveal card-hover rounded-[16px] bg-accent-solid p-7 text-accent-ink md:col-span-5">
+          <div class="grid size-11 place-items-center rounded-[10px] bg-white/15 text-[1.25rem]"><i aria-hidden="true" class="ph ph-play"></i></div>
+          <h3 class="mt-5 font-display text-[19px] font-bold">交互式 Playground</h3>
+          <p class="mt-2 text-[14px] leading-relaxed text-white/85">
+            不必搭好整条链路就能试。单独运行某个组件，实时查看输入输出与 Agent 的工具调用过程。
+          </p>
+          <div class="mt-5 flex items-center gap-2.5 rounded-[10px] bg-white/10 px-4 py-3 text-[12.5px] font-medium">
+            <span class="dot-live" style="background:#fff" aria-hidden="true"></span>单步运行 · 输入输出即时可见
+          </div>
+        </div>
+
+        <!-- Enterprise: surface card with grouped list -->
+        <div class="reveal card card-hover p-7 md:col-span-7">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <div class="itile"><i aria-hidden="true" class="ph ph-shield-check"></i></div>
+              <h3 class="mt-5 font-display text-[19px] font-bold text-ink">企业级安全与可控</h3>
+              <p class="mt-2 max-w-[42ch] text-[14px] leading-relaxed text-muted">SSO、API 密钥、全局变量与权限控制，支持私有化部署，数据留在你自己的环境。</p>
+            </div>
+            <span class="pill pill-accent hidden sm:inline-flex">MIT 开源</span>
+          </div>
+          <div class="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 text-[13.5px] text-muted sm:grid-cols-4">
+            {['SSO 单点登录', '全局变量', '文件与密钥', '权限管理'].map((t) => (
+              <div class="flex items-center gap-2"><i aria-hidden="true" class="ph ph-check text-accent"></i>{t}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDITOR: full-width framed image band + real port legend -->
+  <section id="editor" class="section section-lazy border-y border-hair bg-surface" aria-label="可视化编辑器">
+    <div class="wrap">
+      <div class="reveal flex flex-wrap items-end justify-between gap-6">
+        <h2 class="max-w-[16ch] font-display text-[30px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink md:text-[40px]">像搭积木一样组装 AI 能力</h2>
+        <p class="max-w-[40ch] text-[14.5px] leading-relaxed text-muted">从输入输出到数据、模型与逻辑，所有能力以组件呈现。连线即集成，冻结可复用。</p>
+      </div>
+
+      <div class="reveal card-hover mt-8 overflow-hidden rounded-[16px] bg-surface ring-1 ring-hair shadow-[0_40px_80px_-40px_rgba(21,93,252,0.3)]">
+        <div class="flex items-center gap-3 border-b border-hair px-4 py-3">
+          <div class="flex items-center gap-1.5" aria-hidden="true">
+            <span class="size-2.5 rounded-full bg-[#FF5F57]"></span>
+            <span class="size-2.5 rounded-full bg-[#FEBC2E]"></span>
+            <span class="size-2.5 rounded-full bg-[#28C840]"></span>
+          </div>
+          <span class="mx-auto hidden items-center gap-2 rounded-full border border-hair bg-canvas px-4 py-1 font-mono text-[11.5px] text-faint sm:flex"><i aria-hidden="true" class="ph ph-lock-key text-[11px]"></i>127.0.0.1:7860</span>
+          <span class="pill hidden !py-1 md:inline-flex"><span class="dot-live" aria-hidden="true"></span>本地运行中</span>
+        </div>
+        <FlowShot variant="wide" title="RAG 流程示意：文本输入经切分、向量化后存入向量库，Agent 检索增强作答" desc="六个节点：文本输入、文档切分、向量库、嵌入模型、Agent 问答、对话输出，展示一条完整 RAG 链路。" />
+      </div>
+
+      <div class="reveal mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 text-[13px] text-muted">
+        <span class="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">端口类型</span>
+        {ports.map((p) => (
+          <span class="flex items-center gap-2"><span class="size-2.5 rounded-[3px]" style={`background:${p.color}`}></span>{p.name}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENTS & MCP: two asymmetric panels (code vs list) + publish strip -->
+  <section id="agents" class="section section-lazy" aria-label="智能体与 MCP">
+    <div class="wrap">
+      <div class="reveal max-w-[56ch]">
+        <h2 class="font-display text-[30px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink md:text-[40px]">让 Agent 编排流程，让流程成为工具</h2>
+      </div>
+
+      <div class="mt-10 grid gap-4 lg:grid-cols-2">
+        <div class="reveal card card-hover p-7 md:p-8">
+          <div class="flex items-center justify-between gap-3">
+            <span class="pill pill-accent"><i aria-hidden="true" class="ph ph-brain"></i> 多智能体</span>
+            <button type="button" class="copy-btn" data-copy="agent-code" aria-label="复制 Agent 示例代码"><i aria-hidden="true" class="ph ph-copy text-[12px]"></i><span data-copy-label>复制</span></button>
+          </div>
+          <h3 class="mt-4 font-display text-[21px] font-bold text-ink">把任意流程挂到 Agent 上</h3>
+          <p class="mt-2 text-[14px] leading-relaxed text-muted">组件与整条流程都能作为工具，支持对话管理、检索与多轮推理。</p>
+          <pre class="code mt-5" id="agent-code"><code><span class="cmt"># 将流程作为 Agent 工具</span>
+agent = Agent(tools=[rag_flow, calculator])
+agent.run(<span class="ok">"对比这两款产品的能耗"</span>)
+<span class="cmt"># → 检索 → 计算 → 汇总回答</span></code></pre>
+        </div>
+
+        <div class="reveal card card-hover p-7 md:p-8">
+          <span class="pill pill-accent"><i aria-hidden="true" class="ph ph-plugs-connected"></i> MCP</span>
+          <h3 class="mt-4 font-display text-[21px] font-bold text-ink">一键变身 MCP 服务器</h3>
+          <p class="mt-2 text-[14px] leading-relaxed text-muted">把流程暴露为 MCP 工具，或作为客户端接入外部 MCP 服务，与 Claude、Cursor 等联动。</p>
+          <ul class="mt-5 grid gap-3">
+            <li class="flex items-center justify-between gap-3 rounded-[10px] border border-hair px-4 py-3 transition-colors hover:border-hair-strong">
+              <span class="flex items-center gap-3"><i aria-hidden="true" class="ph ph-upload-simple text-accent text-[18px]"></i><span class="text-[14px] font-medium text-ink">Expose as MCP Server</span></span>
+              <span class="flex items-center gap-2 text-[12px] text-faint"><span class="dot-live" aria-hidden="true"></span>每个流程即工具</span>
+            </li>
+            <li class="flex items-center justify-between gap-3 rounded-[10px] border border-hair px-4 py-3 transition-colors hover:border-hair-strong">
+              <span class="flex items-center gap-3"><i aria-hidden="true" class="ph ph-download-simple text-accent text-[18px]"></i><span class="text-[14px] font-medium text-ink">Connect to MCP Servers</span></span>
+              <span class="flex items-center gap-2 text-[12px] text-faint"><span class="dot-live" aria-hidden="true"></span>接入外部能力</span>
+            </li>
+          </ul>
+          <a href="/docs/mcp/mcp-server" class="link-arrow mt-5 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-accent">查看 MCP 文档 <i aria-hidden="true" class="ph ph-arrow-right text-[14px]"></i></a>
+        </div>
+      </div>
+
+      <div class="reveal mt-4 grid gap-px overflow-hidden rounded-[16px] border border-hair bg-hair sm:grid-cols-3">
+        {[
+          { icon: 'ph-code', t: '发布为 API', d: '自动生成 Python / JS / curl 示例' },
+          { icon: 'ph-monitor-play', t: '嵌入到站点', d: 'HTML / React / Angular 小部件' },
+          { icon: 'ph-export', t: '导出为 JSON', d: '在 Python 应用中直接加载运行' },
+        ].map((x) => (
+          <div class="flex items-start gap-3 bg-surface p-5 transition-colors hover:bg-surface-2">
+            <i aria-hidden="true" class={`ph ${x.icon} mt-0.5 text-[20px] text-accent`}></i>
+            <div><div class="text-[14px] font-semibold text-ink">{x.t}</div><div class="mt-0.5 text-[12.5px] text-muted">{x.d}</div></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL: code-forward split -->
+  <section id="install" class="section section-lazy border-y border-hair bg-surface" aria-label="安装">
+    <div class="wrap grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+      <div class="reveal">
+        <h2 class="font-display text-[30px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink md:text-[38px]">两条命令，本地启动</h2>
+        <p class="mt-4 max-w-[44ch] text-[15px] leading-relaxed text-muted">桌面版零配置，Python 包最灵活，Docker 适合隔离与生产。任选其一。</p>
+        <a href="/install" class="btn btn-invert mt-7">查看完整安装指南 <i aria-hidden="true" class="ph ph-arrow-right text-[15px]"></i></a>
+      </div>
+      <div class="reveal code">
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <span class="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">快速安装</span>
+          <button type="button" class="copy-btn" data-copy="quick-install" aria-label="复制安装命令"><i aria-hidden="true" class="ph ph-copy text-[12px]"></i><span data-copy-label>复制</span></button>
+        </div>
+        <div id="quick-install">
+          <div class="cmt"># 桌面版之外，用 uv 安装 Python 包</div>
+          <div>uv pip install langflow -U</div>
+          <div>uv run langflow run</div>
+          <div class="mt-4 cmt"># 或直接用 Docker</div>
+          <div>docker run -p 7860:7860 langflowai/langflow:latest</div>
+          <div class="ok mt-4">→ http://127.0.0.1:7860</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEPS: numbered strip, a different family from bento/split above -->
+  <section class="section section-lazy border-t border-hair" aria-label="三步上手">
+    <div class="wrap">
+      <div class="reveal max-w-[52ch]">
+        <h2 class="font-display text-[30px] font-extrabold leading-[1.05] tracking-[-0.02em] text-ink md:text-[40px]">三步，从想法到上线</h2>
+      </div>
+      <ol class="mt-10 grid gap-4 md:grid-cols-3">
+        {[
+          { n: '01', icon: 'ph-flow-arrow', t: '拖拽组装', d: '把模型、检索与工具连成一条 Flow。', href: '/docs/concepts/flows' },
+          { n: '02', icon: 'ph-play', t: '实时调试', d: '在 Playground 里单步运行，看清每次推理。', href: '/docs/concepts/playground' },
+          { n: '03', icon: 'ph-rocket-launch', t: '发布集成', d: '以 API、MCP 或站点嵌入接到你的应用。', href: '/docs/concepts/publish' },
+        ].map((s) => (
+          <li class="reveal card card-hover relative overflow-hidden p-7">
+            <div class="flex items-center justify-between">
+              <span class="step-num">{s.n}</span>
+              <i aria-hidden="true" class={`ph ${s.icon} text-[22px] text-accent`}></i>
+            </div>
+            <h3 class="mt-5 font-display text-[18px] font-bold text-ink">{s.t}</h3>
+            <p class="mt-2 text-[13.5px] leading-relaxed text-muted">{s.d}</p>
+            <a href={s.href} class="link-arrow mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent" aria-label={`${s.t}：查看文档`}>查看文档 <i aria-hidden="true" class="ph ph-arrow-right text-[13px]"></i></a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- CLOSING CTA: deliberate dark panel, one primary + one secondary -->
+  <section class="section section-lazy" aria-label="开始使用">
+    <div class="wrap">
+      <div class="reveal hero-grid relative overflow-hidden rounded-[16px] bg-[#0B0C0F] p-9 text-[#ECECEF] ring-1 ring-white/10 md:p-14">
+        <div class="glow-orb -right-24 -top-24 h-[360px] w-[360px]" aria-hidden="true"></div>
+        <div class="relative flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
+          <div>
+            <h2 class="max-w-[18ch] font-display text-[28px] font-extrabold leading-[1.08] tracking-[-0.02em] md:text-[36px]">准备好构建第一个 Flow 了吗？</h2>
+            <p class="mt-3 max-w-[46ch] text-[14.5px] leading-relaxed text-[#A3A4AA]">本地两条命令，或下载桌面版。跟随 Quickstart，几分钟跑通首个流程。</p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <a href="/install" class="btn btn-primary">立即开始 <i class="ph ph-arrow-right text-[15px]" aria-hidden="true"></i></a>
+            <a href="/docs/get-started/quickstart" class="btn btn-on-dark">阅读 Quickstart</a>
+          </div>
+        </div>
+        <div class="relative mt-8 flex flex-wrap gap-x-8 gap-y-2 border-t border-white/10 pt-6 text-[13px]">
+          <a href="/docs/deployment/overview" class="text-[#A3A4AA] transition-colors hover:text-white">部署概览</a>
+          <a href="/docs/deployment/docker" class="text-[#A3A4AA] transition-colors hover:text-white">Docker 指南</a>
+          <a href="https://www.langflow.org/desktop" target="_blank" rel="noreferrer" class="text-[#A3A4AA] transition-colors hover:text-white">桌面版下载</a>
+          <a href="https://github.com/langflow-ai/langflow" target="_blank" rel="noreferrer" class="text-[#A3A4AA] transition-colors hover:text-white">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  import { initCopyButtons } from '../scripts/copy.js';
+  initCopyButtons();
+</script>

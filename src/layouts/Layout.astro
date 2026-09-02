@@ -1,0 +1,88 @@
+---
+// Self-hosted fonts + Phosphor imported via JS so Vite resolves each package's
+// exports map (no render-blocking Google Fonts <link> in production).
+import "@fontsource-variable/space-grotesk";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/jetbrains-mono";
+import "@phosphor-icons/web/regular";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  robots?: string;
+}
+const {
+  title = "Langflow 可视化 AI 工作流与智能体编排",
+  description =
+    "Langflow 是开源的 Python 可视化编排平台。拖拽连接大模型、向量库与工具，实时调试，把每个流程发布为 API 与 MCP 工具。",
+  robots = "index, follow",
+} = Astro.props;
+
+const canonical = "https://langflow.ndjp.net" + Astro.url.pathname;
+const ogImage = "https://langflow.ndjp.net/og.png";
+---
+
+<!doctype html>
+<html lang="zh-CN" class="bg-canvas text-ink">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="32x32 48x48" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="author" content="Langflow 中文社区" />
+
+    <link rel="preconnect" href="https://cdn.simpleicons.org" crossorigin />
+    <link rel="dns-prefetch" href="https://cdn.simpleicons.org" />
+
+    <meta name="theme-color" content="#FCFCF9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0B0C0F" media="(prefers-color-scheme: dark)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content="Langflow 可视化 AI 工作流编排" />
+    <meta property="og:site_name" content="Langflow 中文文档" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "Langflow 中文文档",
+      inLanguage: "zh-CN",
+      url: "https://langflow.ndjp.net/",
+    })} />
+
+    <!-- Resolve theme before first paint to avoid a flash of the wrong mode. -->
+    <script is:inline>
+      (function () {
+        try {
+          var s = localStorage.getItem("theme");
+          var t = s || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.dataset.theme = t;
+          document.documentElement.style.colorScheme = t;
+        } catch (e) {
+          document.documentElement.dataset.theme = "light";
+        }
+      })();
+    </script>
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="min-h-[100dvh] overflow-x-hidden">
+    <a href="#main-content" class="skip-link">跳到主要内容</a>
+    <div class="grain" aria-hidden="true"></div>
+    <slot />
+  </body>
+</html>
