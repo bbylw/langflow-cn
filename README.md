@@ -1,7 +1,5 @@
 <!-- markdownlint-disable MD030 -->
 
-> 本文是 [Langflow 官方 README](https://github.com/langflow-ai/langflow) 的中文翻译，中文文档站见 https://langflow.ndjp.net。
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/langflow-ai/langflow/main/docs/static/img/langflow-logo-color-blue-bg.svg">
   <img src="https://raw.githubusercontent.com/langflow-ai/langflow/main/docs/static/img/langflow-logo-color-black-solid.svg" alt="Langflow logo">
